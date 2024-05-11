@@ -1,0 +1,25 @@
+---
+root: true
+env:
+  node: true
+parserOptions: {}
+extends:
+  - standard
+plugins:
+  - "@stylistic/js"
+rules:
+  no-console: warn
+  comma-dangle:
+    - error
+    - arrays: ignore
+      objects: ignore
+      imports: never
+      exports: never
+      functions: never
+  "@stylistic/js/quote-props":
+    - error
+    - consistent
+#  vue/no-duplicate-attributes:
+#    - error
+#    - allowCoexistClass: true
+#      allowCoexistStyle: true
