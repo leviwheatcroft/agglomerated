@@ -19,6 +19,10 @@ rules:
   "@stylistic/js/quote-props":
     - error
     - consistent
+  no-unused-vars:
+    - error
+    - varsIgnorePattern: _
+
 #  vue/no-duplicate-attributes:
 #    - error
 #    - allowCoexistClass: true

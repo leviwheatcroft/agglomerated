@@ -11,6 +11,7 @@ const prodn = process.env.NODE_ENV === 'production'
 export default {
   mode: prodn ? 'production' : 'development',
   entry: {
+    ...prodn ? {} : { dev: join(process.cwd(), 'dev.js') },
     agglomerated: join(process.cwd(), 'client/index.js')
   },
   output: {
