@@ -5,39 +5,36 @@ import { createApp } from 'vue'
 const app = createApp({
   // sources: [],
   data () {
-    const { sources } = this
     return {
       options: {},
       items: [],
-      sources,
+      moreHooks: [],
       renderer: false
     }
   },
-  watch: {
-    sources (val) {
-      console.log('w', val)
-    }
+  created () {
+    const app = this
+    Promise.all(agglomeratedConfig.plugins.map(([plugin]) => plugin))
+      .then((loaded) => {
+        loaded.forEach(({ default: plugin }, idx) => {
+          const [_, options] = agglomeratedConfig.plugins[idx]
+          plugin.$data = app.$data
+          plugin.component = app.component.bind(app)
+          if (plugin.init) {
+            plugin.init(options)
+          }
+          if (plugin.more) {
+            this.$data.moreHooks.push(plugin.more.bind(plugin))
+          }
+        })
+      })
   },
   methods: {
     more () {
-      this.sources.forEach((source) => source.more())
+      this.moreHooks.forEach((m) => m())
     }
-  },
-  mounted () {
-    console.log(this.sources)
-  },
-  updated () {
-    console.log(this)
   },
   template: '<div :is="renderer"></div>'
 })
 
 app.mount(document.querySelector('body'))
-
-Promise.all(agglomeratedConfig.plugins.map(([plugin]) => plugin))
-  .then((loaded) => {
-    loaded.forEach(({ default: plugin }, idx) => {
-      const [_, config] = agglomeratedConfig.plugins[idx]
-      app.use(plugin, config)
-    })
-  })
