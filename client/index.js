@@ -7,34 +7,38 @@ const app = createApp({
   data () {
     return {
       options: {},
-      items: [],
-      moreHooks: [],
-      renderer: false
+      blocks: [],
+      fetchers: [],
+      renderers: []
     }
   },
   created () {
-    const app = this
     Promise.all(agglomeratedConfig.plugins.map(([plugin]) => plugin))
       .then((loaded) => {
         loaded.forEach(({ default: plugin }, idx) => {
           const [_, options] = agglomeratedConfig.plugins[idx]
-          plugin.$data = app.$data
-          plugin.component = app.component.bind(app)
           if (plugin.init) {
             plugin.init(options)
           }
-          if (plugin.more) {
-            this.$data.moreHooks.push(plugin.more.bind(plugin))
+          if (plugin.fetch) {
+            this.$data.fetchers.push(plugin.fetch.bind(plugin))
+          }
+          if (plugin.render) {
+            this.$data.renderers.push(plugin.render.bind(plugin))
           }
         })
       })
+      .then(() => this.fetch())
   },
   methods: {
-    more () {
-      this.moreHooks.forEach((m) => m())
+    fetch () {
+      this.$data.fetchers.forEach((f) => f().then((blocks) => this.addBlocks(blocks)))
+    },
+    addBlocks (blocks) {
+      this.$data.blocks.push(blocks)
     }
   },
-  template: '<div :is="renderer"></div>'
+  template: '<agglomerator :blocks></agglomerator>'
 })
 
 app.mount(document.querySelector('body'))
