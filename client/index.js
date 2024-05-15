@@ -1,9 +1,13 @@
 /* global agglomeratedConfig */
 
 import { createApp } from 'vue'
+import { Agglomerator } from './Agglomerator.vue'
 
 const app = createApp({
   // sources: [],
+  components: [
+    Agglomerator
+  ],
   data () {
     return {
       options: {},
@@ -32,13 +36,13 @@ const app = createApp({
   },
   methods: {
     fetch () {
-      this.$data.fetchers.forEach((f) => f().then((blocks) => this.addBlocks(blocks)))
+      this.$data.fetchers.forEach((f) => f().then((items) => this.addBlocks(items)))
     },
-    addBlocks (blocks) {
-      this.$data.blocks.push(blocks)
+    addBlocks (items) {
+      this.$data.blocks.push(items)
     }
   },
-  template: '<agglomerator :blocks></agglomerator>'
+  template: '<agglomerator :items></agglomerator>'
 })
 
 app.mount(document.querySelector('body'))
