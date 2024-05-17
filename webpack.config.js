@@ -90,7 +90,10 @@ export default {
   plugins: [
     // new MiniCssExtractPlugin({ filename: '[name].css' }),
     new VueLoaderPlugin(),
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Agglomerated',
+      template: 'index.template.html'
+    }),
     new BrowserSyncPlugin(browserSyncConfig)
   ],
   // optimization: {

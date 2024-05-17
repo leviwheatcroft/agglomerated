@@ -1,4 +1,5 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <meta
       http-equiv="Content-Type"
@@ -6,10 +7,12 @@
     />
     <meta
       name="viewport"
-      content=""width=device-width, initial-scale="1"
+      content="width=device-width, initial-scale=1"
     />
+    <title><%= htmlWebpackPlugin.options.title %></title>
     <script src="/agglomerated.js"></script>
     <!-- <link rel="stylesheet" href="/agglomerated.css"> -->
+    <script><%= require('raw-loader!./dev.js').default %></script>
   </head>
   <body></body>
 </html>

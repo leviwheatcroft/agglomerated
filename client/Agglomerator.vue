@@ -4,6 +4,9 @@ export default {
     items: {
       type: Array,
       default () { return [] }
+    },
+    getRenderer: {
+      type: Function
     }
   }
 }
@@ -12,6 +15,12 @@ export default {
 #agglomerator(
   
 )
+  .item(
+    v-for="item in items"
+    :key="item.id"
+    :is="renderer(item)"
+    :item
+  )
 </template>
 <style>
 

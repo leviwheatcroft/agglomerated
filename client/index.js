@@ -1,7 +1,7 @@
 /* global agglomeratedConfig */
 
 import { createApp } from 'vue'
-import { Agglomerator } from './Agglomerator.vue'
+import Agglomerator from './Agglomerator.vue'
 
 const app = createApp({
   // sources: [],
@@ -17,8 +17,12 @@ const app = createApp({
     }
   },
   created () {
+    // Promise.all(agglomeratedConfig.plugins.map(([plugin]) => {
+    //   return import(/* webpackIgnore: true */ plugin)
+    // }))
     Promise.all(agglomeratedConfig.plugins.map(([plugin]) => plugin))
       .then((loaded) => {
+        console.log(loaded)
         loaded.forEach(({ default: plugin }, idx) => {
           const [_, options] = agglomeratedConfig.plugins[idx]
           if (plugin.init) {
@@ -40,9 +44,15 @@ const app = createApp({
     },
     addBlocks (items) {
       this.$data.blocks.push(items)
+    },
+    getRenderer (item) {
+      let renderer
+      // eslint-disable-next-line no-return-assign
+      this.$data.renderers.some((_renderer) => renderer = _renderer(item))
+      return renderer
     }
   },
-  template: '<agglomerator :items></agglomerator>'
+  template: '<agglomerator :items :getRenderer></agglomerator>'
 })
 
 app.mount(document.querySelector('body'))
